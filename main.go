@@ -10,13 +10,27 @@ Copyright 2019 Leeds Look Listen, Inc.
 */
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 )
 
 func main() {
 
-	fmt.Println("hello world")
+	host := ""
+	port := "443"
+	addr := host + ":" + port
 
-	// http.ListenAndServe()
+	rootHandler := func(w http.ResponseWriter, req *http.Request) {
+		http.Redirect(w, req, "https://www.modernfidelity.us", http.StatusMovedPermanently)
+	}
+
+	http.HandleFunc("/", rootHandler)
+
+	log.Println("Listening on " + addr + "...")
+
+	err := http.ListenAndServeTLS(addr, "./cert.pem", "./privkey.pem", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
