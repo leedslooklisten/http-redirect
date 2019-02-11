@@ -14,11 +14,33 @@ import (
 	"net/http"
 )
 
+func httpServer(host string, c chan int) {
+	httpPort := "80"
+	httpAddr := host + ":" + httpPort
+
+	log.Println("Listening on " + httpAddr + "...")
+	log.Fatal(http.ListenAndServe(httpAddr, nil))
+}
+
+func httpsServer(host string, c chan int) {
+	httpsPort := "443"
+	httpsAddr := host + ":" + httpsPort
+	log.Println("Listening on " + httpsAddr + "...")
+
+	// Debug Only
+	// time.Sleep(5000 * time.Millisecond)
+	// close(c)
+
+	err := http.ListenAndServeTLS(httpsAddr, "./cert.pem", "./privkey.pem", nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
 func main() {
 
 	host := ""
-	port := "443"
-	addr := host + ":" + port
 
 	rootHandler := func(w http.ResponseWriter, req *http.Request) {
 		http.Redirect(w, req, "https://www.modernfidelity.us", http.StatusMovedPermanently)
@@ -26,11 +48,13 @@ func main() {
 
 	http.HandleFunc("/", rootHandler)
 
-	log.Println("Listening on " + addr + "...")
+	c := make(chan int)
 
-	err := http.ListenAndServeTLS(addr, "./cert.pem", "./privkey.pem", nil)
-	if err != nil {
-		log.Fatal(err)
-	}
+	go httpServer(host, c)
+	go httpsServer(host, c)
+
+	_, ok := <-c
+
+	log.Println(ok)
 
 }
