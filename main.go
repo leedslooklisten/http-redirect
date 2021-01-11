@@ -1,12 +1,11 @@
 package main
 
 /*
-
 Simple HTTP-redirect web server
 Author: J. Benjamin Leeds
-Created: February 8. 2019
-Copyright 2019 Leeds Look Listen, Inc.
-
+Created: February 8, 2019
+Modified: January 10, 2021
+© 2021 Leeds Look Listen, Inc.
 */
 
 import (
@@ -18,6 +17,10 @@ func httpServer(host string, c chan int) {
 	httpPort := "80"
 	httpAddr := host + ":" + httpPort
 
+	/* http.ListenAndServe starts an HTTP server given an address and handler.
+	* A nil handler means to use the DefaultServeMux. Use .Handle() and
+	* .HandleFunc() to add handlers to the DefaultServeMux.
+	*/
 	log.Println("Listening on " + httpAddr + "...")
 	log.Fatal(http.ListenAndServe(httpAddr, nil))
 }
