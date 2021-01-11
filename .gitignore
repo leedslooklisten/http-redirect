@@ -1,3 +1,9 @@
+# .gitignore
+# Created: 
+# Modified: Sunday January 10, 2021
+# Author: J. Benjamin Leeds
+# © 2021 Leeds Look Listen, Inc.
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -13,3 +19,6 @@
 
 # Certificates and Private Keys
 *.pem
+
+# Mac OS
+.DS_Store
